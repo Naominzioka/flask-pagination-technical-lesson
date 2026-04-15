@@ -15,6 +15,7 @@ importlib-resources = "*"
 werkzeug = "*"
 python-dotenv = "*"
 psycopg2-binary = "*"
+gunicorn = "*"
 
 [dev-packages]
 
