@@ -9,10 +9,19 @@ from models import Recipe, RecipeSchema
 
 class Recipes(Resource):
     def get(self):
-        recipes = [RecipeSchema().dump(r) for r in Recipe.query.all()]
-
-        return recipes, 200
-
+        page = request.args.get("page", 1, type=int)  #accept query parameters
+        per_page = request.args.get("per_page", 5, type=int)
+        pagination = Recipe.query.paginate(page=page, per_page=per_page, error_out=False)  #use .paginate() to fetch just the right records
+        recipes = pagination.items
+        
+        return {
+            "page": page,
+            "per_page": per_page,
+            "total": pagination.total,
+            "total_pages": pagination.pages,
+            "items": [RecipeSchema().dump(recipe) for recipe in recipes]            
+        }, 200
+        
 api.add_resource(Recipes, '/recipes', endpoint='recipes')
 
 
